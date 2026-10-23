@@ -50,8 +50,16 @@ mistake, briefly derives a straight line, and then recovers.
 Qwen tokenises digits one at a time, so "1 2" plausibly means **12**, the correct answer. The very
 next text span says *"even the shortest months are 30 days long. So the only month with 28
 days is February"* (false), and the final answer is 1. This is one sample, and the span is cut off right
-after the digits, so the reading is ambiguous. It's still the most interesting single moment
-in the run: it reverses the usual worry, with the latent right and the text wrong.
+after the digits, so the reading is ambiguous.
+
+*Follow-up (`questions/months28.txt`, the same question ×10):* **all ten traces were
+word-for-word identical.** At the inspector's default settings, generation is fully
+repeatable, so repeats add nothing. A real repeat test needs `--temperature` above 0
+and/or varying `--seed`. The full trace also weakens the reading above: the **first**
+latent span says *"I know that in a [year] has 1 2 months"*, so "12" was already in play
+as *months in a year*. The later "the number would be 1 2," is as plausibly an echo of
+that as a correct answer being overridden. Verdict: unresolved, and a good example of a
+readout fragment that fits whichever story you bring to it.
 
 **3. Real arithmetic does happen in latent mode.** In the 3599 problem, latent spans carry out
 *"3+5=8, 8+9=17, 17+9=26"* and *"359 − (2×9) = 359 − 18 = 341"* correctly. On the
@@ -89,9 +97,11 @@ junk. The text, meanwhile, correctly adds tunnel + train.
 ## Summary
 
 The pseudo-text is a lossy shadow of the latent state: honest where it's legible, but its
-legibility is mostly the easy tokens. Of the two interesting events, neither is "the latent
-corrects an error before the text does". One shows an error forming in latent first; the
-other shows a correct latent being overridden by text.
+legibility is mostly the easy tokens. Neither interesting event is "the latent corrects an
+error before the text does". One shows an error forming in latent first. The other looked
+like a correct latent being overridden by text, but on inspection it's ambiguous.
+
+Write-up: [Reading an AI's latent thoughts for 80p](https://soulfiremage.github.io/posts/hybridagentprobe/).
 
 ## Running it yourself
 
