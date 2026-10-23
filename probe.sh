@@ -31,6 +31,9 @@ for P in $(grep -vE '^#|^torch|deepspeed|^$' requirements.txt); do
 done
 pip install -q -e . --no-deps 2>/dev/null
 
+# Show the inspector's options (sampling, temperature, ...) for the record.
+python -m interpretable_latent_mode --help 2>&1 | head -n 40
+
 N=0
 while IFS= read -r Q; do
   [ -z "$Q" ] && continue
