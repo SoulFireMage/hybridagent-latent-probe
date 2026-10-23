@@ -10,6 +10,8 @@
 set -u
 SET="${SET:-traps}"
 MODEL="${MODEL:-togethercomputer/HybridAgent-8B-Agentic}"
+# TEMP    optional sampling temperature; when set, question N also gets --seed N
+TEMP="${TEMP:-}"
 REPO="${REPO:-https://raw.githubusercontent.com/SoulFireMage/hybridagent-latent-probe/main}"
 
 # The search tool imports tavily at start-up even if you never search.
@@ -32,13 +34,15 @@ done
 pip install -q -e . --no-deps 2>/dev/null
 
 # Show the inspector's options (sampling, temperature, ...) for the record.
-python -m interpretable_latent_mode --help 2>&1 | head -n 40
+python -m interpretable_latent_mode --help 2>&1 | head -n 70
 
 N=0
 while IFS= read -r Q; do
   [ -z "$Q" ] && continue
   N=$((N+1))
-  python -m interpretable_latent_mode --model "$MODEL" --question "$Q" \
+  SAMPLING=""
+  [ -n "$TEMP" ] && SAMPLING="--temperature $TEMP --seed $N"
+  python -m interpretable_latent_mode --model "$MODEL" --question "$Q" $SAMPLING \
       --output "/tmp/r$N.html" >/dev/null 2>&1 || echo "INSPECTOR FAILED on Q$N"
 done < /tmp/questions.txt
 
